@@ -10,12 +10,55 @@ var Form = function ( $glob )  {
     
   }
 
-  self.preload = function(){
-    trace("preloading ");
+  self.preload = function( world ){
+    world.load.image('sky',         'images/sky.png');
+    world.load.image('ground',      'images/platform.png');
+    world.load.image('star',        'images/star.png');
+    world.load.spritesheet('dude',  'images/dude.png', 32, 48);
   }
 
-  self.create = function( ){
-    trace("createing");
+  self.create = function( world ){
+    world.physics.startSystem(Phaser.Physics.ARCADE);
+    world.add.sprite(0, 0, 'sky');
+
+    return;
+    platforms = world.add.group();
+    platforms.enableBody = true;
+
+    var ground = platforms.create(0, world.world.height - 64, 'ground');
+    ground.scale.setTo(2, 2);
+    ground.body.immovable = true;
+
+    var ledge = platforms.create(400, 400, 'ground');
+    ledge.body.immovable = true;
+
+    ledge = platforms.create(-150, 250, 'ground');
+    ledge.body.immovable = true;
+
+    player = game.add.sprite(32, game.world.height - 150, 'dude');
+
+    game.physics.arcade.enable(player);
+
+    player.body.bounce.y = 0.2;
+    player.body.gravity.y = 300;
+    player.body.collideWorldBounds = true;
+
+    player.animations.add('left', [0, 1, 2, 3], 10, true);
+    player.animations.add('right', [5, 6, 7, 8], 10, true);
+
+    stars = game.add.group();
+
+    stars.enableBody = true;
+
+    for (var i = 0; i < 12; i++)
+    {
+        var star = stars.create(i * 70, 0, 'star');
+        star.body.gravity.y = 300;
+        star.body.bounce.y = 0.7 + Math.random() * 0.2;
+    }
+
+    scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+    cursors = game.input.keyboard.createCursorKeys();
   }
 
   self.update = function(){
@@ -140,31 +183,14 @@ var GlobContent = function ( $core, $control ) {
     var control = self.control;
 
     var options = { preload: control.preload, create: control.create, update: control.update, render:control.render };
-    var game = self.game = self.core.game = new Phaser.Game( self.core.width, self.core.height, Phaser.AUTO, divID,  options );
+    var world = self.world= self.core.world = new Phaser.Game( self.core.width, self.core.height, Phaser.AUTO, divID,  options );
     
     window.onresize = function( event ) { self.resize() };
 
-
   	return self.core.glob;
   }
-
-  //self.preload = function(){}
-
-  //self.update = function(){}
-
-  //self.render = function(){}
-
-  //self.create = function () {
-    //self.core.game.physics.startSystem(Phaser.Physics.ARCADE);
-  
-  //}
-
-
-
-  self.randColor = function() { return Math.floor(Math.random() * 256); };  
-
 	
-	
+  	
 	self.resize = function(){
   		
       var width = self.core.width = $(window).width(); 
@@ -213,14 +239,16 @@ var GlobControl = function ( $core, $event ) {
 		trace("reset the form");
 	}
 
-	self.preload = function(){ 	self.core.form.preload() 	}
+	self.preload = function(){ 	self.core.form.preload( self.core.world ) 	}
 
-  	self.create = function(){	self.core.form.create() 	}
+  	self.create = function(){	self.core.form.create( self.core.world  ) 	}
 
-  	self.update = function(){	self.core.form.update() 	}
+  	self.update = function(){	self.core.form.update( self.core.world  ) 	}
 
-  	self.render = function(){	self.core.form.render() 	}
+  	self.render = function(){	self.core.form.render( self.core.world  ) 	}
     
+    self.randColor = function() { return Math.floor(Math.random() * 256); };  
+
 
 
 	///
@@ -361,7 +389,7 @@ var GlobCore = function ( $name ) {
 
 	form:{ 				value:null, 	writable:true 	},
 	//PHASER GAME
-	game:{ 				value:null, 	writable:true 	},// i would change this to world
+	world:{ 			value:null, 	writable:true 	},// i would change this to world
 	
 
 	//OLD NEWS
@@ -391,9 +419,6 @@ var GlobCore = function ( $name ) {
 	rockError:{ 		value:"Rock Type Not Present "},
 
 	glob:{ 				value:"glob"	, 	writable:true },
-
-	worldSrc:{ 			value:"client/static/images/world/"	, writable:true	},
-	world:{ 			value:null	    , 	writable:true 	},		
 	
 	stage:{ 			value:"stage"	, 	writable:true	},
 	width:{ 			value:500, 			writable:true 	},		

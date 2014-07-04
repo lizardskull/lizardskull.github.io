@@ -7,7 +7,7 @@ var GlobCore = function ( $name ) {
 
 	form:{ 				value:null, 	writable:true 	},
 	//PHASER GAME
-	game:{ 				value:null, 	writable:true 	},// i would change this to world
+	world:{ 			value:null, 	writable:true 	},// i would change this to world
 	
 
 	//OLD NEWS
@@ -37,9 +37,6 @@ var GlobCore = function ( $name ) {
 	rockError:{ 		value:"Rock Type Not Present "},
 
 	glob:{ 				value:"glob"	, 	writable:true },
-
-	worldSrc:{ 			value:"client/static/images/world/"	, writable:true	},
-	world:{ 			value:null	    , 	writable:true 	},		
 	
 	stage:{ 			value:"stage"	, 	writable:true	},
 	width:{ 			value:500, 			writable:true 	},		

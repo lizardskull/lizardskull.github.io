@@ -28,14 +28,16 @@ var GlobControl = function ( $core, $event ) {
 		trace("reset the form");
 	}
 
-	self.preload = function(){ 	self.core.form.preload() 	}
+	self.preload = function(){ 	self.core.form.preload( self.core.world ) 	}
 
-  	self.create = function(){	self.core.form.create() 	}
+  	self.create = function(){	self.core.form.create( self.core.world  ) 	}
 
-  	self.update = function(){	self.core.form.update() 	}
+  	self.update = function(){	self.core.form.update( self.core.world  ) 	}
 
-  	self.render = function(){	self.core.form.render() 	}
+  	self.render = function(){	self.core.form.render( self.core.world  ) 	}
     
+    self.randColor = function() { return Math.floor(Math.random() * 256); };  
+
 
 
 	///

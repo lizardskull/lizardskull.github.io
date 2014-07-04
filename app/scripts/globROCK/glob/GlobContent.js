@@ -36,31 +36,14 @@ var GlobContent = function ( $core, $control ) {
     var control = self.control;
 
     var options = { preload: control.preload, create: control.create, update: control.update, render:control.render };
-    var game = self.game = self.core.game = new Phaser.Game( self.core.width, self.core.height, Phaser.AUTO, divID,  options );
+    var world = self.world= self.core.world = new Phaser.Game( self.core.width, self.core.height, Phaser.AUTO, divID,  options );
     
     window.onresize = function( event ) { self.resize() };
 
-
   	return self.core.glob;
   }
-
-  //self.preload = function(){}
-
-  //self.update = function(){}
-
-  //self.render = function(){}
-
-  //self.create = function () {
-    //self.core.game.physics.startSystem(Phaser.Physics.ARCADE);
-  
-  //}
-
-
-
-  self.randColor = function() { return Math.floor(Math.random() * 256); };  
-
 	
-	
+  	
 	self.resize = function(){
   		
       var width = self.core.width = $(window).width(); 
