@@ -99,24 +99,25 @@ var GlobContent = function ( $core, $control ) {
 	var self =  Object.create( module, { 
 	core:{ 				  value:$core    	},
 	control:{ 			value:$control },
-	viewPort:{			value:{ x:0,	y:0 }, 	  	writable:true },
-	renderer:{  		value:null , 		      	writable:true },
-  view:{        	value:null,           	  	writable:true },
-	stage:{  		  	value:null , 			  	writable:true },
-	environment:{  	value:null , 			  	writable:true },
-	soulLayer:{    	value:null , 			  	writable:true },
-	boundaryBox:{ 	value:null,           	  	writable:true },
-	lastStep:{ 			value:0, 					writable:true },
-	remainder:{ 		value:0, 					writable:true },
+	viewPort:{			value:{ x:0,	y:0 }, 	  	    writable:true },
+	renderer:{  		value:null , 		      	      writable:true },
+  view:{        	value:null,           	  	  writable:true },
+	stage:{  		  	value:null , 			  	        writable:true },
+	environment:{  	value:null , 			  	        writable:true },
+	soulLayer:{    	value:null , 			  	        writable:true },
+	boundaryBox:{ 	value:null,           	  	  writable:true },
+	lastStep:{ 			value:0, 					            writable:true },
+	remainder:{ 		value:0, 					            writable:true },
 
-  scale:{ 			value:1, 					writable:true },
+  scale:{ 			value:1, 					              writable:true },
 
-  htmlContainer:{ 	value:null, 				writable:true },
+  htmlContainer:{ 	value:null, 				        writable:true },
 
 	});
 
 	self.awake = function (){
 
+    var divID = 'cosmos';
     var div = self.htmlContainer = document.getElementsByTagName("div")[0];
 
     var width = div.offsetWidth;
@@ -124,114 +125,44 @@ var GlobContent = function ( $core, $control ) {
 
     self.core.width = width;
     self.core.height = height;
-    
-    self.renderer  = PIXI.autoDetectRenderer( self.core.width, self.core.height );
-    self.fps = 0;
 
-    var view = self.view = self.renderer.view; // need to figure out with this is 
-	  
- 
+    var options = { preload: self.preload, create: self.create, update: self.update, render:self.render };
 
-    trace(' what is the width of the div ' + height );
-	  div.appendChild( view );
-
-    view.style.position = "absolute";
-    view.webkitImageSmoothingEnabled = false;
-    var HIGH_MODE = self.renderer instanceof PIXI.WebGLRenderer;
-    var interactive = true;
-    self.stage = new PIXI.Stage(0xFF00FF, interactive);
-
-    self.stage.width = width;
-
-    self.core.stage = self.stage;
+    var game = self.game = self.core.game = new Phaser.Game( self.core.width, self.core.height, Phaser.AUTO, divID,  options );
     
-    self.resize();
-    self.update();     
-    
-    self.display          = new PIXI.DisplayObjectContainer;
-    self.environment 	    = new PIXI.DisplayObjectContainer;
-    self.soulLayer 	      = new  PIXI.DisplayObjectContainer;
-    
-    self.display.addChild( self.environment );
-    self.display.addChild( self.soulLayer );
-    
-    self.stage.addChild( self.display  );
-    
-    self.soulLayer.scale.x = 1;
-    self.soulLayer.scale.y = 1;
-
     window.onresize = function( event ) { self.resize() };
 
-     //self.physics = require('./Demo')( $core, $control, self );
-     //trace("does the demo exist " + self.physics );
-
-
-    //self.physics = require('./GlobPhysics')( $core, $control, self );
-
-    //self.physics.awake();
 
   	return self.core.glob;
+  }
+
+  self.preload = function(){}
+
+  self.update = function(){}
+
+  self.render = function(){}
+
+  self.create = function () {
+    self.core.game.physics.startSystem(Phaser.Physics.ARCADE);
+  
   }
 
 
 
   self.randColor = function() { return Math.floor(Math.random() * 256); };  
 
-	self.update = function (){
-		
-    self.renderer.render( self.stage);
-	window.requestAnimFrame( self.update);
-	if ( self.core.world == null ) return;
-	if ( self.core.world.update == null ) return;	
-  	self.control.execute();
-    self.core.world.update();
-  	self.step();
-	},
-
-	self.render = function (){
-		self.soulLayer.position.x 		= self.core.x * -1;;
-		self.soulLayer.position.y 		= self.core.y;
-	},
-
+	
+	
 	self.resize = function(){
   		
+      var width = self.core.width = $(window).width(); 
+  		var height = self.core.height = $(window).height(); 
 
-      //trace("resize ");
-      //return;
-
-
-      self.core.width = $(window).width(); 
-  		self.core.height = $(window).height(); 
-
-  		var globWidth   = self.core.width;
-  		var globHeight  = self.core.height;
-  		var ratio = 1;
-
-      trace("globWidth " +globWidth )
-
-
-      //var ratio = width / globWidth;
-
-		  //if ( height > width)
-		 // {
-		 //   var temp = width;
-		 //   width = height;
-		 //   height = temp;
-		 // }
-
-  	//	self.core.width = width;
-  //		self.core.glob.height = height;
+      self.core.game.width = width;
+      self.core.game.height = height;
   
-  		//self.core.glob.y = 400;
-  		//world.x = world.viewPort.width + 10000; NOT REALLY SURE WHAT THIS DOES
-   
-  		var view = self.view;
-  		//view.style.height = height +"px"
-  
-  		view.style.height = globHeight * ratio +"px"
-  		//var newWidth = (width /ratio);
-  		view.style.width = globWidth * ratio +"px"
-  		self.renderer.resize( globWidth, globHeight );
+      if (self.core.game.renderType === Phaser.WEBGL) self.core.game.renderer.resize(width, height);
+          
   	}
 
 	return self; 
@@ -386,6 +317,10 @@ var GlobCore = function ( $name ) {
 	
 	debug:{ 			value:true, 	writable:true 	},
 	preload:{ 			value:[], 		writable:true 	},
+
+	//PHASER GAME
+	game:{ 				value:null, 	writable:true 	},
+	
 	
 	name:{ 				value:$name 	},
 	id:{				value:"none"	},

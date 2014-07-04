@@ -7,6 +7,10 @@ var GlobCore = function ( $name ) {
 	
 	debug:{ 			value:true, 	writable:true 	},
 	preload:{ 			value:[], 		writable:true 	},
+
+	//PHASER GAME
+	game:{ 				value:null, 	writable:true 	},
+	
 	
 	name:{ 				value:$name 	},
 	id:{				value:"none"	},
