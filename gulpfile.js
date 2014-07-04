@@ -29,12 +29,36 @@ var pagespeed = require('psi');
 var reload = browserSync.reload;
 
 // Lint JavaScript
+var browserify = require('browserify');
+var gulp = require('gulp');
+var source = require('vinyl-source-stream');
+
+var paths = {
+ scripts: ['app/**/*'],
+ dist: ['gator/']
+};
+
+gulp.task('moveToMaster', function(){
+ gulp.src( paths.scripts )
+ .pipe(gulp.dest(paths.dist));
+});
+ 
+gulp.task('ify', function() {
+    return browserify('./app/scripts/game.js')
+        .bundle()
+        //Pass desired output filename to vinyl-source-stream
+        .pipe(source('gameBundle.js'))
+        // Start piping stream to tasks!
+        .pipe(gulp.dest('./app/scripts/'));
+});
+
+
 gulp.task('jshint', function () {
-  return gulp.src('app/scripts/**/*.js')
-    .pipe(reload({stream: true, once: true}))
-    .pipe($.jshint())
-    .pipe($.jshint.reporter('jshint-stylish'))
-    .pipe($.if(!browserSync.active, $.jshint.reporter('fail')));
+  //return gulp.src('app/scripts/**/*.js')
+  //  .pipe(reload({stream: true, once: true}))
+  //  .pipe($.jshint())
+  //  .pipe($.jshint.reporter('jshint-stylish'))
+  // .pipe($.if(!browserSync.active, $.jshint.reporter('fail')));
 });
 
 // Optimize Images
@@ -46,13 +70,6 @@ gulp.task('images', function () {
     })))
     .pipe(gulp.dest('dist/images'))
     .pipe($.size({title: 'images'}));
-});
-
-// Copy All Files At The Root Level (app)
-gulp.task('copy', function() {
-  return gulp.src(['app/*', '!app/*.html'])
-    .pipe(gulp.dest('dist'))
-    .pipe($.size({title: 'copy'}));
 });
 
 // Automatically Prefix CSS
@@ -72,9 +89,6 @@ gulp.task('styles:components', function () {
       precision: 10,
       loadPath: ['app/styles/components']
     }))
-    .on('error', function (err) {
-      console.log(err);
-    })
     .pipe($.autoprefixer('last 1 version'))
     .pipe(gulp.dest('app/styles/components'))
     .pipe($.size({title: 'styles:components'}));
@@ -107,17 +121,7 @@ gulp.task('html', function () {
     // Remove Any Unused CSS
     // Note: If not using the Style Guide, you can delete it from
     // the next line to only include styles your project uses.
-    .pipe($.if('*.css', $.uncss({
-      html: [
-        'app/index.html',
-        'app/styleguide/index.html'
-      ],
-      // CSS Selectors for UnCSS to ignore
-      ignore: [
-        '.navdrawer-container.open',
-        /.app-bar.open/
-      ]
-    })))
+    .pipe($.if('*.css', $.uncss({ html: ['app/index.html','app/styleguide/index.html'] })))
     .pipe($.useref.restore())
     .pipe($.useref())
     // Update Production Style Guide Paths
@@ -132,6 +136,12 @@ gulp.task('html', function () {
 // Clean Output Directory
 gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
 
+var clean = require('gulp-clean');
+
+gulp.task('cleanMaster', function() {
+  return gulp.src(['../master/*'], {read: false}).pipe(clean( {force: true} ));
+});
+
 // Watch Files For Changes & Reload
 gulp.task('serve', function () {
   browserSync({
@@ -141,26 +151,37 @@ gulp.task('serve', function () {
     }
   });
 
+
+ createGame();
+
+
   gulp.watch(['app/**/*.html'], reload);
   gulp.watch(['app/styles/**/*.scss'], ['styles:components', 'styles:scss']);
   gulp.watch(['{.tmp,app}/styles/**/*.css'], ['styles:css', reload]);
-  gulp.watch(['app/scripts/**/*.js'], ['jshint']);
+  gulp.watch(['app/scripts/**/*.js'], restartGame );
   gulp.watch(['app/images/**/*'], reload);
 });
 
-// Build and serve the output from the dist build
-gulp.task('serve:dist', ['default'], function () {
-  browserSync({
-    notify: false,
-    server: {
-      baseDir: 'dist'
-    }
-  });
-});
+
+var restartGame = function(){
+  console.log("JavaScript has changed:: Restart the Game");
+  createGame();
+ 
+};
+
+var createGame = function(){
+  console.log("JavaScript has changed:: Creating the Game");
+  browserify('./app/scripts/game.js').bundle( null, createGameComplete ).pipe(source('gameBundle.js')).pipe(gulp.dest('./app/scripts/')); 
+};
+
+var createGameComplete = function(){
+  console.log("Create Game Complete ");
+  reload();
+}
 
 // Build Production Files, the Default Task
 gulp.task('default', ['clean'], function (cb) {
-  runSequence('styles', ['jshint', 'html', 'images', 'copy'], cb);
+  runSequence('styles', ['jshint', 'html', 'images', 'cleanMaster', 'moveToMaster'], cb);
 });
 
 // Run PageSpeed Insights

@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Lizard Skull</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Web Starter Kit</title>
 
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -29,41 +29,24 @@
     <link rel="stylesheet" href="styles/h5bp.css">
     <link rel="stylesheet" href="styles/components/components.css">
     <link rel="stylesheet" href="styles/main.css">
+	<link href="/styles/fluidbox.css"  rel="stylesheet" />    
     <!-- endbuild -->
-
-    <!-- Google Fonts -->
-    <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,300,700'>
   </head>
   <body>
-    <header class="app-bar promote-layer">
-      <div class="app-bar-container">
-        <button class="menu"><img src="images/hamburger.svg" alt="Menu"></button>
-        <h1 class="logo">Lizard Skull Was Here</h1>
-        <section class="app-bar-actions">
-        <!-- Put App Bar Buttons Here -->
-        </section>
-      </div>
-    </header>
 
-    <nav class="navdrawer-container promote-layer">
-      <h4>Navigation</h4>
-      <ul>
-        <li><a href="#hello">Wello</a></li>
-        <li><a href="#get-started">World</a></li>
-        <li><a href="styleguide/index.html">SEcerts</a></li>
-      </ul>
-    </nav>
-
-    <main>
-      <h1 id="hello">Wello!</h1>
-      <p>Im Lizard Skull.</p>
-
-      <h2 id="get-started">Pleased to MEET You</h2>
-      <p>Read how to <a href="http://developers.google.com/web/starter-kit">Get Started</a> or check out the <a href="styleguide/index.html">Style Guide</a>.</p>
-    </main>
-
+    <div style = 'position:absolute; top: 0; right: 0; bottom: 0; left: 0;' ></div>
+  
     <!-- build:js scripts/main.min.js -->
     <script src="scripts/main.js"></script>
+    <script src="scripts/jquery-1.11.0.min.js"></script>
+    <script src="scripts/jquery.fluidbox.js"></script>
+    <script src="scripts/chance.js"></script>
+    <script src="scripts/pixi.js"></script>
+    <script src="scripts/matter-0.8.0.js"></script>
+    <script src="scripts/gameBundle.js"></script>
+
+	
+	
     <!-- endbuild -->
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
@@ -75,6 +58,14 @@
       ga('create', 'UA-XXXXX-X');
       ga('send', 'pageview');
     </script>
+
+ 
+	<script type="text/javascript" charset="utf-8">
+  	
+
+
+	</script>
+ 
     <!-- Built with love using Web Starter Kit -->
   </body>
 </html>

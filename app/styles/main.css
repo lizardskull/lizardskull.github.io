@@ -22,6 +22,7 @@ body {
   box-sizing: border-box;
   overflow: hidden;
   min-height: 100%;
+  
 }
 
 .app-bar {
@@ -213,7 +214,7 @@ main {
 }
 
 /** Larger Screens - desktops and tablets **/
-@media all and (min-width: 1200px) {
+@media all and (min-device-width: 1200px) {
   .app-bar {
     position: relative;
   }
@@ -300,7 +301,7 @@ main {
   }
 }
 
-@media all and (min-width: 1200px) and (max-width: 800px) {
+@media all and (min-device-width: 1200px) and (max-width: 800px) {
   .app-bar .logo {
     float: none;
     width: 100%;
