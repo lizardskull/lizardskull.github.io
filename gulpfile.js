@@ -44,12 +44,12 @@ gulp.task('moveToMaster', function(){
 });
  
 gulp.task('ify', function() {
-    return browserify('./app/scripts/game.js')
+    return browserify('./app/globs/src.js')
         .bundle()
         //Pass desired output filename to vinyl-source-stream
-        .pipe(source('gameBundle.js'))
+        .pipe(source('globulus.js'))
         // Start piping stream to tasks!
-        .pipe(gulp.dest('./app/scripts/'));
+        .pipe(gulp.dest('./app/globs/'));
 });
 
 
