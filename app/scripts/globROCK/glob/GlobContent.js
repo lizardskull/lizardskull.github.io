@@ -43,14 +43,14 @@ var GlobContent = function ( $core, $control ) {
   	return self.core.glob;
   }
 	
-  	
+
 	self.resize = function(){
   		
       var width = self.core.width = $(window).width(); 
   		var height = self.core.height = $(window).height(); 
 
-      self.core.game.width = width;
-      self.core.game.height = height;
+      self.core.world.width = width;
+      self.core.world.height = height;
   
       if (self.core.game.renderType === Phaser.WEBGL) self.core.game.renderer.resize(width, height);
           

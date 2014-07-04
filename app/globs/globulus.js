@@ -11,6 +11,8 @@ var Form = function ( $glob )  {
   }
 
   self.preload = function( world ){
+    self.world = world;
+
     world.load.image('sky',         'images/sky.png');
     world.load.image('ground',      'images/platform.png');
     world.load.image('star',        'images/star.png');
@@ -20,6 +22,8 @@ var Form = function ( $glob )  {
   self.create = function( world ){
 
     self.score = 0;
+
+    world.world.setBounds(0, 0, 2400, 1400);
 
     world.physics.startSystem(Phaser.Physics.ARCADE);
     world.add.sprite(0, 0, 'sky');
@@ -44,6 +48,7 @@ var Form = function ( $glob )  {
     player.body.bounce.y = 0.2;
     player.body.gravity.y = 300;
     player.body.collideWorldBounds = true;
+    world.camera.follow( player, Phaser.Camera.FOLLOW_LOCKON);
 
     player.animations.add('left', [0, 1, 2, 3], 10, true);
     player.animations.add('right', [5, 6, 7, 8], 10, true);
@@ -112,7 +117,7 @@ var Form = function ( $glob )  {
     
     star.kill();
     self.score += 10;
-    self.scoreText.text = 'Score: ' + self.score;
+    self.scoreText.text = 'Score: ' + self.world.time.fps ;
 
 }
 
@@ -237,14 +242,14 @@ var GlobContent = function ( $core, $control ) {
   	return self.core.glob;
   }
 	
-  	
+
 	self.resize = function(){
   		
       var width = self.core.width = $(window).width(); 
   		var height = self.core.height = $(window).height(); 
 
-      self.core.game.width = width;
-      self.core.game.height = height;
+      self.core.world.width = width;
+      self.core.world.height = height;
   
       if (self.core.game.renderType === Phaser.WEBGL) self.core.game.renderer.resize(width, height);
           
