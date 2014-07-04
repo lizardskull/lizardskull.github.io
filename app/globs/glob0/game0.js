@@ -20,9 +20,10 @@ var Form = function ( $glob )  {
 
   self.create = function( world ){
 
+    
     self.score = 0;
 
-    world.world.setBounds(0, 0, 2400, 1400);
+    world.world.setBounds(0, 0, 5400, 1400);
 
     world.physics.startSystem(Phaser.Physics.ARCADE);
     world.add.sprite(0, 0, 'sky');
@@ -31,7 +32,7 @@ var Form = function ( $glob )  {
     platforms.enableBody = true;
 
     var ground = self.ground = platforms.create(0, world.world.height - 64, 'ground');
-    ground.scale.setTo(2, 2);
+    ground.scale.setTo(50, 2);
     ground.body.immovable = true;
 
     var ledge = self.ledge = platforms.create(400, 400, 'ground');
@@ -47,7 +48,7 @@ var Form = function ( $glob )  {
     player.body.bounce.y = 0.2;
     player.body.gravity.y = 300;
     player.body.collideWorldBounds = true;
-    world.camera.follow( player, Phaser.Camera.FOLLOW_LOCKON);
+    world.camera.follow( player, Phaser.Camera.FOLLOW_PLATFORMER);
 
     player.animations.add('left', [0, 1, 2, 3], 10, true);
     player.animations.add('right', [5, 6, 7, 8], 10, true);

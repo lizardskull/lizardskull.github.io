@@ -52,7 +52,7 @@ var GlobContent = function ( $core, $control ) {
       self.core.world.width = width;
       self.core.world.height = height;
   
-      if (self.core.game.renderType === Phaser.WEBGL) self.core.game.renderer.resize(width, height);
+      if (self.core.world.renderType === Phaser.WEBGL) self.core.world.renderer.resize(width, height);
           
   	}
 
