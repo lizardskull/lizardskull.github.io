@@ -14,6 +14,38 @@ var GlobControl = function ( $core, $event ) {
 	//event:{value:$event  }
 	});
 
+	self.formFromBeyond = function( form ){
+		trace("do you have a form oh yeah" + form );
+
+		if ( self.core.form != null ) self.resetForm();
+		self.core.form = form;
+
+
+		// take all the functions and add them to the glob
+	}
+
+	self.resetForm	= function(){
+		trace("reset the form");
+	}
+
+	self.preload = function(){ 	self.core.form.preload() 	}
+
+  	self.create = function(){	self.core.form.create() 	}
+
+  	self.update = function(){	self.core.form.update() 	}
+
+  	self.render = function(){	self.core.form.render() 	}
+    
+
+
+	///
+	//EVERYTHING BELOW IS OLD NEWS
+
+
+
+
+
+
 	self.removeRockPhysics = function( rock ){
 		if ( rock.body 	!= null ) self.core.bodyRemoveList.push( 	rock 	);
 		if ( rock.shape != null ) self.core.shapeRemoveList.push( 	rock 	);

@@ -4,12 +4,17 @@ var GlobCore = function ( $name ) {
 	
 	//Create the vars
 	var self = Object.create( module, { 
+
+	form:{ 				value:null, 	writable:true 	},
+	//PHASER GAME
+	game:{ 				value:null, 	writable:true 	},// i would change this to world
+	
+
+	//OLD NEWS
 	
 	debug:{ 			value:true, 	writable:true 	},
 	preload:{ 			value:[], 		writable:true 	},
 
-	//PHASER GAME
-	game:{ 				value:null, 	writable:true 	},
 	
 	
 	name:{ 				value:$name 	},

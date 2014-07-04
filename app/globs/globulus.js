@@ -1,4 +1,38 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+"use strict";
+
+var Form = function ( $glob )  { 
+  
+  var self       = Object.create( module, {});
+
+  self.awake = function( glob ){
+  	trace("awake? again");
+    
+  }
+
+  self.preload = function(){
+    trace("preloading ");
+  }
+
+  self.create = function( ){
+    trace("createing");
+  }
+
+  self.update = function(){
+    //trace("updating");
+  }
+
+  self.render = function(){
+    //trace("rendering");
+  }
+
+  
+  
+  return self; 
+};
+
+exports = module.exports = Form;
+},{}],2:[function(require,module,exports){
 (function (global){
 
 // move this out to the index
@@ -13,10 +47,12 @@ global.trace = window.trace;
 
 
 $(document).ready(function() {
+  
+  var glob    = require("../scripts/globROCK/Access")();
+  var form    = require('./glob0/game0')();
 
-  var glob   = require("../scripts/globROCK/Access")();
-  trace( 'does the glob content exist' + glob.content );
-  glob.awake();
+  glob.createForm( form );
+  //glob.awake();
  
   //GLOB.glob = glob;
   //global.art = GLOB.art = {};
@@ -30,7 +66,7 @@ $(document).ready(function() {
   });
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../scripts/globROCK/Access":2}],2:[function(require,module,exports){
+},{"../scripts/globROCK/Access":3,"./glob0/game0":1}],3:[function(require,module,exports){
 "use strict";
 
 var Glob = function () {
@@ -49,6 +85,11 @@ var Glob = function () {
 	chance:             { value:null } 	
 	});
 
+	self.createForm = function( form ){
+		self.control.formFromBeyond( form );
+		self.content.awake();
+	}
+
 	
 	self.awake = function(){
 		self.control.awake();
@@ -60,7 +101,7 @@ var Glob = function () {
 
 
 exports = module.exports = Glob;
-},{"./glob/GlobContent":3,"./glob/GlobControl":4,"./glob/GlobCore":5,"./glob/GlobEvent":6}],3:[function(require,module,exports){
+},{"./glob/GlobContent":4,"./glob/GlobControl":5,"./glob/GlobCore":6,"./glob/GlobEvent":7}],4:[function(require,module,exports){
 "use strict";
 
 var GlobContent = function ( $core, $control ) { 
@@ -96,8 +137,9 @@ var GlobContent = function ( $core, $control ) {
     self.core.width = width;
     self.core.height = height;
 
-    var options = { preload: self.preload, create: self.create, update: self.update, render:self.render };
+    var control = self.control;
 
+    var options = { preload: control.preload, create: control.create, update: control.update, render:control.render };
     var game = self.game = self.core.game = new Phaser.Game( self.core.width, self.core.height, Phaser.AUTO, divID,  options );
     
     window.onresize = function( event ) { self.resize() };
@@ -106,16 +148,16 @@ var GlobContent = function ( $core, $control ) {
   	return self.core.glob;
   }
 
-  self.preload = function(){}
+  //self.preload = function(){}
 
-  self.update = function(){}
+  //self.update = function(){}
 
-  self.render = function(){}
+  //self.render = function(){}
 
-  self.create = function () {
-    self.core.game.physics.startSystem(Phaser.Physics.ARCADE);
+  //self.create = function () {
+    //self.core.game.physics.startSystem(Phaser.Physics.ARCADE);
   
-  }
+  //}
 
 
 
@@ -139,7 +181,7 @@ var GlobContent = function ( $core, $control ) {
 };
 
 exports = module.exports = GlobContent;
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 (function (Buffer){
 "use strict";
 
@@ -156,6 +198,38 @@ var GlobControl = function ( $core, $event ) {
 	//time:{value:timeControl},
 	//event:{value:$event  }
 	});
+
+	self.formFromBeyond = function( form ){
+		trace("do you have a form oh yeah" + form );
+
+		if ( self.core.form != null ) self.resetForm();
+		self.core.form = form;
+
+
+		// take all the functions and add them to the glob
+	}
+
+	self.resetForm	= function(){
+		trace("reset the form");
+	}
+
+	self.preload = function(){ 	self.core.form.preload() 	}
+
+  	self.create = function(){	self.core.form.create() 	}
+
+  	self.update = function(){	self.core.form.update() 	}
+
+  	self.render = function(){	self.core.form.render() 	}
+    
+
+
+	///
+	//EVERYTHING BELOW IS OLD NEWS
+
+
+
+
+
 
 	self.removeRockPhysics = function( rock ){
 		if ( rock.body 	!= null ) self.core.bodyRemoveList.push( 	rock 	);
@@ -277,19 +351,24 @@ var GlobControl = function ( $core, $event ) {
 
 exports = module.exports = GlobControl;
 }).call(this,require("buffer").Buffer)
-},{"./control/RockControl":7,"buffer":9,"fs":8}],5:[function(require,module,exports){
+},{"./control/RockControl":8,"buffer":10,"fs":9}],6:[function(require,module,exports){
 "use strict";
 
 var GlobCore = function ( $name ) { 
 	
 	//Create the vars
 	var self = Object.create( module, { 
+
+	form:{ 				value:null, 	writable:true 	},
+	//PHASER GAME
+	game:{ 				value:null, 	writable:true 	},// i would change this to world
+	
+
+	//OLD NEWS
 	
 	debug:{ 			value:true, 	writable:true 	},
 	preload:{ 			value:[], 		writable:true 	},
 
-	//PHASER GAME
-	game:{ 				value:null, 	writable:true 	},
 	
 	
 	name:{ 				value:$name 	},
@@ -365,7 +444,7 @@ var GlobCore = function ( $name ) {
 };
 
 exports = module.exports = GlobCore;
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 "use strict";
 
 //"Let that which does not matter truly slide."
@@ -438,7 +517,7 @@ exports = module.exports = GlobEvent;
 
 
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 
 var RockControl = function ( $name ) { 
@@ -452,9 +531,9 @@ var RockControl = function ( $name ) {
 };
 
 exports = module.exports = RockControl;
-},{}],8:[function(require,module,exports){
-
 },{}],9:[function(require,module,exports){
+
+},{}],10:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -1612,7 +1691,7 @@ function assert (test, message) {
   if (!test) throw new Error(message || 'Failed assertion')
 }
 
-},{"base64-js":10,"ieee754":11}],10:[function(require,module,exports){
+},{"base64-js":11,"ieee754":12}],11:[function(require,module,exports){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 ;(function (exports) {
@@ -1734,7 +1813,7 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 	exports.fromByteArray = uint8ToBase64
 }(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 exports.read = function(buffer, offset, isLE, mLen, nBytes) {
   var e, m,
       eLen = nBytes * 8 - mLen - 1,
@@ -1820,4 +1899,4 @@ exports.write = function(buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128;
 };
 
-},{}]},{},[1])
+},{}]},{},[2])

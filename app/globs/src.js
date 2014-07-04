@@ -11,10 +11,12 @@ global.trace = window.trace;
 
 
 $(document).ready(function() {
+  
+  var glob    = require("../scripts/globROCK/Access")();
+  var form    = require('./glob0/game0')();
 
-  var glob   = require("../scripts/globROCK/Access")();
-  trace( 'AWAKEN THE GLOBULOUS ' + glob.content );
-  glob.awake();
+  glob.createForm( form );
+  //glob.awake();
  
   //GLOB.glob = glob;
   //global.art = GLOB.art = {};

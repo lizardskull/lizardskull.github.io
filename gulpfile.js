@@ -159,6 +159,7 @@ gulp.task('serve', function () {
   gulp.watch(['app/styles/**/*.scss'], ['styles:components', 'styles:scss']);
   gulp.watch(['{.tmp,app}/styles/**/*.css'], ['styles:css', reload]);
   gulp.watch(['app/scripts/**/*.js'], restartGame );
+  gulp.watch(['app/globs/**/*.js'], restartGame );
   gulp.watch(['app/images/**/*'], reload);
 });
 
@@ -171,7 +172,7 @@ var restartGame = function(){
 
 var createGame = function(){
   console.log("JavaScript has changed:: Creating the Game");
-  browserify('./app/scripts/game.js').bundle( null, createGameComplete ).pipe(source('gameBundle.js')).pipe(gulp.dest('./app/scripts/')); 
+  browserify('./app/globs/src.js').bundle( null, createGameComplete ).pipe(source('globulus.js')).pipe(gulp.dest('./app/globs/')); 
 };
 
 var createGameComplete = function(){

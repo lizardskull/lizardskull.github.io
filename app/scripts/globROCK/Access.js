@@ -16,6 +16,11 @@ var Glob = function () {
 	chance:             { value:null } 	
 	});
 
+	self.createForm = function( form ){
+		self.control.formFromBeyond( form );
+		self.content.awake();
+	}
+
 	
 	self.awake = function(){
 		self.control.awake();

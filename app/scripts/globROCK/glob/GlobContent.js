@@ -33,8 +33,9 @@ var GlobContent = function ( $core, $control ) {
     self.core.width = width;
     self.core.height = height;
 
-    var options = { preload: self.preload, create: self.create, update: self.update, render:self.render };
+    var control = self.control;
 
+    var options = { preload: control.preload, create: control.create, update: control.update, render:control.render };
     var game = self.game = self.core.game = new Phaser.Game( self.core.width, self.core.height, Phaser.AUTO, divID,  options );
     
     window.onresize = function( event ) { self.resize() };
@@ -43,16 +44,16 @@ var GlobContent = function ( $core, $control ) {
   	return self.core.glob;
   }
 
-  self.preload = function(){}
+  //self.preload = function(){}
 
-  self.update = function(){}
+  //self.update = function(){}
 
-  self.render = function(){}
+  //self.render = function(){}
 
-  self.create = function () {
-    self.core.game.physics.startSystem(Phaser.Physics.ARCADE);
+  //self.create = function () {
+    //self.core.game.physics.startSystem(Phaser.Physics.ARCADE);
   
-  }
+  //}
 
 
 
