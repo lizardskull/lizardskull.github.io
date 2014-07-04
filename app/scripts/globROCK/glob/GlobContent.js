@@ -26,19 +26,31 @@ var GlobContent = function ( $core, $control ) {
 
     var divID = 'cosmos';
     var div = self.htmlContainer = document.getElementsByTagName("div")[0];
+    //div = null;
 
-    var width = div.offsetWidth;
-    var height = div.clientHeight;
+    var width = 600;
+    var height = 300;
+
+    trace("u got a div ??" + div);
+
+    if ( div != null ){
+    width = div.offsetWidth;
+    height = div.clientHeight;
+    }
+
+    if ( div == null ) divID = '';
 
     self.core.width = width;
     self.core.height = height;
 
     var control = self.control;
 
+    trace("what is the core " + self.core.width );
+
     var options = { preload: control.preload, create: control.create, update: control.update, render:control.render };
     var world = self.world= self.core.world = new Phaser.Game( self.core.width, self.core.height, Phaser.AUTO, divID,  options );
     
-    window.onresize = function( event ) { self.resize() };
+    //window.onresize = function( event ) { self.resize() };
 
   	return self.core.glob;
   }

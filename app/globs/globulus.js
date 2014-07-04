@@ -21,7 +21,8 @@ var Form = function ( $glob )  {
 
   self.create = function( world ){
 
-    
+    trace("allmost knocked out ");
+
     self.score = 0;
 
     world.world.setBounds(0, 0, 5400, 1400);
@@ -66,7 +67,19 @@ var Form = function ( $glob )  {
     }
 
     self.scoreText = world.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
-    self.cursors = world.input.keyboard.createCursorKeys();
+  
+  }
+
+  self.heroJump = function(){
+
+    trace("should u be jumping ??????");
+
+    var player = self.player;
+
+    if ( player.body.touching.down)
+    {
+        player.body.velocity.y = -350;
+    }
   }
 
   self.update = function( world ){
@@ -79,35 +92,13 @@ var Form = function ( $glob )  {
     world.physics.arcade.overlap( self.player, self.stars, self.collectStar, null, this);
 
     //  Reset the players velocity (movement)
-    player.body.velocity.x = 0;
+    player.body.velocity.x = 100;
+    player.animations.play('right');
 
-    if (cursors.left.isDown)
-    {
-        //  Move to the left
-        player.body.velocity.x = -150;
-
-        player.animations.play('left');
-    }
-    else if (cursors.right.isDown)
-    {
-        //  Move to the right
-        player.body.velocity.x = 150;
-
-        player.animations.play('right');
-    }
-    else
-    {
-        //  Stand still
-        player.animations.stop();
-
-        player.frame = 4;
-    }
+    
     
     //  Allow the player to jump if they are touching the ground.
-    if (cursors.up.isDown && player.body.touching.down)
-    {
-        player.body.velocity.y = -350;
-    }
+    
   }
 
   self.render = function(){
@@ -226,19 +217,31 @@ var GlobContent = function ( $core, $control ) {
 
     var divID = 'cosmos';
     var div = self.htmlContainer = document.getElementsByTagName("div")[0];
+    //div = null;
 
-    var width = div.offsetWidth;
-    var height = div.clientHeight;
+    var width = 600;
+    var height = 300;
+
+    trace("u got a div ??" + div);
+
+    if ( div != null ){
+    width = div.offsetWidth;
+    height = div.clientHeight;
+    }
+
+    if ( div == null ) divID = '';
 
     self.core.width = width;
     self.core.height = height;
 
     var control = self.control;
 
+    trace("what is the core " + self.core.width );
+
     var options = { preload: control.preload, create: control.create, update: control.update, render:control.render };
     var world = self.world= self.core.world = new Phaser.Game( self.core.width, self.core.height, Phaser.AUTO, divID,  options );
     
-    window.onresize = function( event ) { self.resize() };
+    //window.onresize = function( event ) { self.resize() };
 
   	return self.core.glob;
   }
