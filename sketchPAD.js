@@ -292,3 +292,18 @@ self.update = function (){
     self.core.world.update();
   	self.step();
 	},
+
+
+
+  for (var i = rock.toonList.length - 1; i >= 0; i--) {
+      var toon = rock.toonList[i];
+
+      if ( toon.id == null    ) continue;
+      if ( toon.src == null     ) toon.src = toon.id;
+      if ( toon.frames == null  ) {
+        if( frameData[ toon.src] != null  ) toon.frames = frameData[ toon.src]
+        continue;
+      }
+
+      //self.replaceFramesWithURLs( toon.frames, frameData[toon.src] );// TURN THIS OFF FOR NOW WILL NEED LATR
+    };
