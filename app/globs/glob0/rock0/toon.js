@@ -2,7 +2,7 @@
 
 var Opening = function ( $glob )  { 
   
-  var self = require( "../../node_modules/globROCK/Rock" )( $glob );
+  var self       = Object.create( module, {});
   self.name = "Black",
   self.contentType = 'Chariot';
   self.toonList = 	[   

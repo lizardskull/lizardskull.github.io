@@ -4,7 +4,7 @@ var GlobControl = function ( $core, $event ) {
 	
 	//var timeControl			= './control/TimeControl';
 	
-	var rockControl	 		    = require( './control/RockControl'  )();
+	//var rockControl	 		    = require( './control/RockControl'  )();
 	//timeControl			 	= require( timeControl )( $core, $event );
 
 	var self = Object.create( module, { 
@@ -15,20 +15,36 @@ var GlobControl = function ( $core, $event ) {
 	});
 
 	self.formFromBeyond = function( form ){
-		trace("do you have a form oh yeah" + form );
-
 		if ( self.core.form != null ) self.resetForm();
 		self.core.form = form;
-
-
-		// take all the functions and add them to the glob
 	}
 
 	self.resetForm	= function(){
 		trace("reset the form");
 	}
 
-	self.preload = function(){ 	self.core.form.preload( self.core.world ) 	}
+	self.preloadRock = function( rock ){
+		trace("what does the rock look like " + rock.toonList );
+
+		self.fetchSpriteFile( rock );
+
+		// all we need is the images?
+	}
+
+	self.fetchSpriteFile = function ( rock ){
+
+		trace("fetch sprite files " + rock );
+		
+		var fs 	= require('fs');
+		trace(" do you have fs " + fs );
+
+		var fileLocation = './rock0/toon';
+		//var files = fs.readdirSync( fileLocation );
+
+		//trace("files " + files );
+	}
+
+	self.preload = function(){ 	self.core.form.preload( self.core.glob ) 	}
 
   	self.create = function(){	self.core.form.create( self.core.world  ) 	}
 

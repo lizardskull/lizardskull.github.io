@@ -6,21 +6,22 @@ var Form = function ( $glob )  {
 
   self.awake = function( glob ){
   	trace("awake? again");
-    
   }
 
-  self.preload = function( world ){
-    self.world = world;
+  self.preload = function( glob ){
+    
+    var rock = require('./rock0/toon')();
+    trace(" is rocky there " + rock );
 
-    world.load.image('sky',         'images/sky.png');
-    world.load.image('ground',      'images/platform.png');
-    world.load.image('star',        'images/star.png');
-    world.load.spritesheet('dude',  'images/dude.png', 32, 48);
+    glob.preloadRock( rock );
+
+    //world.load.image('sky',         'images/sky.png');
+    //world.load.image('ground',      'images/platform.png');
+    //world.load.image('star',        'images/star.png');
+    //world.load.spritesheet('dude',  'images/dude.png', 32, 48);
   }
 
   self.create = function( world ){
-
-    trace("allmost knocked out ");
 
     self.score = 0;
 
@@ -51,8 +52,8 @@ var Form = function ( $glob )  {
     player.body.collideWorldBounds = true;
     world.camera.follow( player, Phaser.Camera.FOLLOW_PLATFORMER);
 
-    player.animations.add('left', [0, 1, 2, 3], 10, true);
-    player.animations.add('right', [5, 6, 7, 8], 10, true);
+    //player.animations.add('left', [0, 1, 2, 3], 10, true);
+    //player.animations.add('right', [5, 6, 7, 8], 10, true);
 
     var stars = self.stars = world.add.group();
 
@@ -70,8 +71,6 @@ var Form = function ( $glob )  {
   }
 
   self.heroJump = function(){
-
-    trace("should u be jumping ??????");
 
     var player = self.player;
 
@@ -92,7 +91,7 @@ var Form = function ( $glob )  {
 
     //  Reset the players velocity (movement)
     player.body.velocity.x = 100;
-    player.animations.play('right');
+    //player.animations.play('right');
 
     
     
@@ -106,9 +105,9 @@ var Form = function ( $glob )  {
 
   self.collectStar = function(player, star) {
     
-    star.kill();
-    self.score += 10;
-    self.scoreText.text = 'Score: ' + self.world.time.fps ;
+    //star.kill();
+    //self.score += 10;
+    //self.scoreText.text = 'Score: ' + self.world.time.fps ;
 
 }
 

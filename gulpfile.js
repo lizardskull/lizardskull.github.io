@@ -32,6 +32,8 @@ var reload = browserSync.reload;
 var browserify = require('browserify');
 var gulp = require('gulp');
 var source = require('vinyl-source-stream');
+var globART = require('globART');
+
 
 var paths = {
  scripts: ['app/**/*'],
@@ -162,6 +164,22 @@ gulp.task('serve', function () {
   gulp.watch(['app/globs/**/*.js'], restartGame );
   gulp.watch(['app/images/**/*'], reload);
 });
+
+gulp.task('art', function() {
+   console.log( " ART!!!");
+   globART();
+
+});
+
+
+gulp.task('artify',['art'], function(){
+   console.log( " ARTify!!!");
+});
+
+
+var updateAssets = function(){
+
+}
 
 
 var restartGame = function(){

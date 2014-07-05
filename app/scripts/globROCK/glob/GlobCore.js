@@ -5,7 +5,8 @@ var GlobCore = function ( $name ) {
 	//Create the vars
 	var self = Object.create( module, { 
 
-	form:{ 				value:null, 	writable:true 	},
+	glob:{ 				value:"glob"	, 	writable:true },
+	form:{ 				value:null, 	writable:true 	  },
 	//PHASER GAME
 	world:{ 			value:null, 	writable:true 	},// i would change this to world
 	
@@ -36,7 +37,7 @@ var GlobCore = function ( $name ) {
 	
 	rockError:{ 		value:"Rock Type Not Present "},
 
-	glob:{ 				value:"glob"	, 	writable:true },
+	
 	
 	stage:{ 			value:"stage"	, 	writable:true	},
 	width:{ 			value:500, 			writable:true 	},		

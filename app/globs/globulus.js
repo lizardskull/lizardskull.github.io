@@ -7,21 +7,22 @@ var Form = function ( $glob )  {
 
   self.awake = function( glob ){
   	trace("awake? again");
-    
   }
 
-  self.preload = function( world ){
-    self.world = world;
+  self.preload = function( glob ){
+    
+    var rock = require('./rock0/toon')();
+    trace(" is rocky there " + rock );
 
-    world.load.image('sky',         'images/sky.png');
-    world.load.image('ground',      'images/platform.png');
-    world.load.image('star',        'images/star.png');
-    world.load.spritesheet('dude',  'images/dude.png', 32, 48);
+    glob.preloadRock( rock );
+
+    //world.load.image('sky',         'images/sky.png');
+    //world.load.image('ground',      'images/platform.png');
+    //world.load.image('star',        'images/star.png');
+    //world.load.spritesheet('dude',  'images/dude.png', 32, 48);
   }
 
   self.create = function( world ){
-
-    trace("allmost knocked out ");
 
     self.score = 0;
 
@@ -52,8 +53,8 @@ var Form = function ( $glob )  {
     player.body.collideWorldBounds = true;
     world.camera.follow( player, Phaser.Camera.FOLLOW_PLATFORMER);
 
-    player.animations.add('left', [0, 1, 2, 3], 10, true);
-    player.animations.add('right', [5, 6, 7, 8], 10, true);
+    //player.animations.add('left', [0, 1, 2, 3], 10, true);
+    //player.animations.add('right', [5, 6, 7, 8], 10, true);
 
     var stars = self.stars = world.add.group();
 
@@ -71,8 +72,6 @@ var Form = function ( $glob )  {
   }
 
   self.heroJump = function(){
-
-    trace("should u be jumping ??????");
 
     var player = self.player;
 
@@ -93,7 +92,7 @@ var Form = function ( $glob )  {
 
     //  Reset the players velocity (movement)
     player.body.velocity.x = 100;
-    player.animations.play('right');
+    //player.animations.play('right');
 
     
     
@@ -107,9 +106,9 @@ var Form = function ( $glob )  {
 
   self.collectStar = function(player, star) {
     
-    star.kill();
-    self.score += 10;
-    self.scoreText.text = 'Score: ' + self.world.time.fps ;
+    //star.kill();
+    //self.score += 10;
+    //self.scoreText.text = 'Score: ' + self.world.time.fps ;
 
 }
 
@@ -119,7 +118,22 @@ var Form = function ( $glob )  {
 };
 
 exports = module.exports = Form;
-},{}],2:[function(require,module,exports){
+},{"./rock0/toon":2}],2:[function(require,module,exports){
+"use strict";
+
+var Opening = function ( $glob )  { 
+  
+  var self       = Object.create( module, {});
+  self.name = "Black",
+  self.contentType = 'Chariot';
+  self.toonList = 	[   
+					{ viz:1,  	id:'toon',  src:"toon",  	 speed:1 },
+           			];
+  return self; 
+};
+
+exports = module.exports = Opening;
+},{}],3:[function(require,module,exports){
 (function (global){
 
 // move this out to the index
@@ -153,7 +167,7 @@ $(document).ready(function() {
   });
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../scripts/globROCK/Access":3,"./glob0/game0":1}],3:[function(require,module,exports){
+},{"../scripts/globROCK/Access":4,"./glob0/game0":1}],4:[function(require,module,exports){
 "use strict";
 
 var Glob = function () {
@@ -163,18 +177,24 @@ var Glob = function () {
 	var control			= require( './glob/GlobControl' )( core, event );
 	var content			= require( './glob/GlobContent' )( core, control );
 
-
 	var self 			= Object.create( module, {
-	core: 				{ value:core },
+	core: 				{ value:core 	},
 	control: 			{ value:control },
 	content: 			{ value:content },
-	event:      		{ value:event },
-	chance:             { value:null } 	
+	event:      		{ value:event 	},
+	chance:             { value:null 	} 	
 	});
+
+	self.core.glob = self;
 
 	self.createForm = function( form ){
 		self.control.formFromBeyond( form );
 		self.content.awake();
+	}
+
+	//How do you create a rock?
+	self.preloadRock = function( rock ){
+		self.control.preloadRock( rock );
 	}
 
 	
@@ -188,7 +208,7 @@ var Glob = function () {
 
 
 exports = module.exports = Glob;
-},{"./glob/GlobContent":4,"./glob/GlobControl":5,"./glob/GlobCore":6,"./glob/GlobEvent":7}],4:[function(require,module,exports){
+},{"./glob/GlobContent":5,"./glob/GlobControl":6,"./glob/GlobCore":7,"./glob/GlobEvent":8}],5:[function(require,module,exports){
 "use strict";
 
 var GlobContent = function ( $core, $control ) { 
@@ -263,7 +283,7 @@ var GlobContent = function ( $core, $control ) {
 };
 
 exports = module.exports = GlobContent;
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 (function (Buffer){
 "use strict";
 
@@ -271,7 +291,7 @@ var GlobControl = function ( $core, $event ) {
 	
 	//var timeControl			= './control/TimeControl';
 	
-	var rockControl	 		    = require( './control/RockControl'  )();
+	//var rockControl	 		    = require( './control/RockControl'  )();
 	//timeControl			 	= require( timeControl )( $core, $event );
 
 	var self = Object.create( module, { 
@@ -282,20 +302,36 @@ var GlobControl = function ( $core, $event ) {
 	});
 
 	self.formFromBeyond = function( form ){
-		trace("do you have a form oh yeah" + form );
-
 		if ( self.core.form != null ) self.resetForm();
 		self.core.form = form;
-
-
-		// take all the functions and add them to the glob
 	}
 
 	self.resetForm	= function(){
 		trace("reset the form");
 	}
 
-	self.preload = function(){ 	self.core.form.preload( self.core.world ) 	}
+	self.preloadRock = function( rock ){
+		trace("what does the rock look like " + rock.toonList );
+
+		self.fetchSpriteFile( rock );
+
+		// all we need is the images?
+	}
+
+	self.fetchSpriteFile = function ( rock ){
+
+		trace("fetch sprite files " + rock );
+		
+		var fs 	= require('fs');
+		trace(" do you have fs " + fs );
+
+		var fileLocation = './rock0/toon';
+		//var files = fs.readdirSync( fileLocation );
+
+		//trace("files " + files );
+	}
+
+	self.preload = function(){ 	self.core.form.preload( self.core.glob ) 	}
 
   	self.create = function(){	self.core.form.create( self.core.world  ) 	}
 
@@ -435,7 +471,7 @@ var GlobControl = function ( $core, $event ) {
 
 exports = module.exports = GlobControl;
 }).call(this,require("buffer").Buffer)
-},{"./control/RockControl":8,"buffer":10,"fs":9}],6:[function(require,module,exports){
+},{"buffer":10,"fs":9}],7:[function(require,module,exports){
 "use strict";
 
 var GlobCore = function ( $name ) { 
@@ -443,7 +479,8 @@ var GlobCore = function ( $name ) {
 	//Create the vars
 	var self = Object.create( module, { 
 
-	form:{ 				value:null, 	writable:true 	},
+	glob:{ 				value:"glob"	, 	writable:true },
+	form:{ 				value:null, 	writable:true 	  },
 	//PHASER GAME
 	world:{ 			value:null, 	writable:true 	},// i would change this to world
 	
@@ -474,7 +511,7 @@ var GlobCore = function ( $name ) {
 	
 	rockError:{ 		value:"Rock Type Not Present "},
 
-	glob:{ 				value:"glob"	, 	writable:true },
+	
 	
 	stage:{ 			value:"stage"	, 	writable:true	},
 	width:{ 			value:500, 			writable:true 	},		
@@ -525,7 +562,7 @@ var GlobCore = function ( $name ) {
 };
 
 exports = module.exports = GlobCore;
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 
 //"Let that which does not matter truly slide."
@@ -598,20 +635,6 @@ exports = module.exports = GlobEvent;
 
 
 
-},{}],8:[function(require,module,exports){
-"use strict";
-
-var RockControl = function ( $name ) { 
-	
-	//Create the vars
-	var self = Object.create( module, { 
-	
-	});
-
-	return self; 
-};
-
-exports = module.exports = RockControl;
 },{}],9:[function(require,module,exports){
 
 },{}],10:[function(require,module,exports){
@@ -1980,4 +2003,4 @@ exports.write = function(buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128;
 };
 
-},{}]},{},[2])
+},{}]},{},[3])
