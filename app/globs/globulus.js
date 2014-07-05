@@ -129,9 +129,9 @@ var Opening = function ( $glob )  {
   self.contentType = 'Chariot';
   self.toonList = [
 
-					{ viz:1,  	id:'toon1',  src:"toon",  	 speed:1 },
-					{ viz:1,  	id:'toon2',  src:"toon",  	 speed:1 },
-					{ viz:1,  	id:'toon3',  src:"toon",  	 speed:1 }
+					{ id:'toon' },
+					{ id:'toon2' },
+					{ id:'toon3', frames:[ 5,5,5,5,5,5,5,5,5] }
 
            			];
   return self; 
